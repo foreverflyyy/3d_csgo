@@ -1,4 +1,4 @@
-# 3D_newGame
+# 3d Engine
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/foreverflyyy/3d_newgame.git
+git remote add origin https://gitlab.com/mishklgpmi/3d_engine.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.com/foreverflyyy/3d_newgame/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.com/mishklgpmi/3d_engine/-/settings/integrations)
 
 ## Collaborate with your team
 
