@@ -2,31 +2,25 @@
 #include <iostream>
 #include <cmath>
 
-namespace mt
-{
-	struct Point
-	{
+namespace nu {
+	struct Point {
 		double x, y, z;
 	};
 
-	struct Angles
-	{
+	struct Angles {
 		double roll, pitch, yaw;
 	};
 
-	struct Pixel
-	{
-		uint8_t r, g, b, a;
+	struct Pixel{
+        uint8_t r, g, b, a;
 	};
 
-	struct Intrinsic
-	{
+	struct Intrinsic{
 		double fu, fv;
 		double du, dv;
 	};
 
-	class Camera
-	{
+	class Camera{
 	public:
 		Camera(int width, int height, Intrinsic intrinsic, Point position, Angles angles);
 		~Camera();

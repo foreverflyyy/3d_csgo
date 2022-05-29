@@ -1,13 +1,11 @@
 #include <camera.hpp>
 #include <matrix.hpp>
 
-namespace mt
-{
+namespace nu {
 	using nu::math::Mat33d;
 	using nu::math::Vec3d;
 
-	Camera::Camera(int width, int height, Intrinsic intrinsic, Point position, Angles angles)
-	{
+	Camera::Camera(int width, int height, Intrinsic intrinsic, Point position, Angles angles) {
 		m_height = height;
 		m_width = width;
 		m_intrinsic = intrinsic;
@@ -18,27 +16,23 @@ namespace mt
 		Clear();
 	}
 
-	Camera::~Camera()
-	{
+	Camera::~Camera() {
 		delete[] m_picture;
 	}
 
 	Pixel* Camera::Picture() { return m_picture; }
 
-	void Camera::Fill(Pixel pixel)
-	{
+	void Camera::Fill(Pixel pixel) {
 		for (int i = 0; i < m_height; i++)
 			for (int j = 0; j < m_width; j++)
 				m_picture[i * m_width + j] = pixel;
 	}
 
-	void Camera::Clear()
-	{
-		Fill({ 0,0,0,0 });
+	void Camera::Clear() {
+        Fill({ 255,255,255, 255});
 	}
 
-	void Camera::ProjectPoint(Point p, Pixel c)
-	{
+	void Camera::ProjectPoint(Point p, Pixel c) {
 		// Наклон камеры на 90 градусов
 		double X = p.x;
 		double Y = -p.z;
@@ -85,33 +79,28 @@ namespace mt
 		u = u * m_intrinsic.fu + m_intrinsic.du;
 		v = v * m_intrinsic.fv + m_intrinsic.dv;
 
-		if (u >= 0 && u < m_width && v >= 0 && v < m_height)
-		{
+		if (u >= 0 && u < m_width && v >= 0 && v < m_height) {
 			m_picture[(int)v * m_width + (int)u] = c;
 		}
 	}
 
-	void Camera::dX(double d) 
-	{
+	void Camera::dX(double d) {
 		m_position.x += d * cos(-m_angles.pitch);
 		m_position.y += 0;
 		m_position.z += d * sin(-m_angles.pitch);
 	}
 
-	void Camera::dZ(double d) 
-	{
+	void Camera::dZ(double d) {
 		m_position.x += d * sin(m_angles.pitch);
 		m_position.y += d * sin(m_angles.roll);
 		m_position.z += d * cos(m_angles.pitch);
 	}
 
-	void Camera::dRoll(double droll) 
-	{
+	void Camera::dRoll(double droll) {
 		m_angles.roll += droll;
 	}
 
-	void Camera::dPitch(double dpitch) 
-	{
+	void Camera::dPitch(double dpitch){
 		m_angles.pitch += dpitch;
 	}
 }

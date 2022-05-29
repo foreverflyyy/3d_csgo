@@ -1,13 +1,14 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <Scene.hpp>
 
-int main()
-{
-	mt::Scene scene(1920, 1080);
+int main() {
+	nu::Scene scene(1920, 1080);
 	scene.LifeCycle();
 
 	return 0;
 }
+
+
 
 //Используя самодельный 3d-движок (https://gitlab.com/mishklgpmi/3d_engine ),
 //визуализируйте облако точек из файла points.txt.
