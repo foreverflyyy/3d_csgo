@@ -29,7 +29,7 @@ namespace nu {
 	}
 
 	void Camera::Clear() {
-        Fill({ 55,55,55, 255});
+        Fill({ 0,0,0, 255});
 	}
 
 	void Camera::ProjectPoint(Point p, Pixel c) {

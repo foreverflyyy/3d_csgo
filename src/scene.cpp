@@ -48,28 +48,28 @@ namespace nu {
 					m_window->close();
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-				m_camera->dZ(0.05);
+				m_camera->dZ(20.05);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-				m_camera->dZ(-0.05);
+				m_camera->dZ(-20.05);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-				m_camera->dX(-0.05);
+				m_camera->dX(-20.05);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-				m_camera->dX(0.05);
+				m_camera->dX(20.05);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				m_camera->dPitch(-0.0125);
+				m_camera->dPitch(-20.0125);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				m_camera->dPitch(0.0125);
+				m_camera->dPitch(20.0125);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				m_camera->dRoll(-0.015);
+				m_camera->dRoll(-20.015);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				m_camera->dRoll(0.015);
+				m_camera->dRoll(20.015);
 			}
 
             //m_object->Work();
@@ -82,12 +82,18 @@ namespace nu {
                 while (getline( myfile, line )){
                     //std::cout << "Source string: " << line << std::endl;
                     std::vector<std::string> r = split(line, " ");
-                    m_points[m_size].x = stod(r[0]) - 450000;
-                    m_points[m_size].y = stod(r[1]) - 5000000;
-                    m_points[m_size].z = stod(r[2]);
-                    m_camera->ProjectPoint(m_points[m_size], {255, 0, 0, 255});
-                    //m_camera->ProjectPoint(m_points[m_size], {stod(r[4]), stoi(r[4]), stoi(r[5]), 255});
-                    //cout << "First: " << stoi(r[3])  << " ; Second: " << stoi(r[4])  << " ; Third: " << stoi(r[5]) << endl;
+                    m_points[m_size].x = stod(r[0]) - 467365;
+                    m_points[m_size].y = stod(r[1]) - 6063510;
+                    m_points[m_size].z = stod(r[2]) - 52;
+                    //m_camera->ProjectPoint(m_points[m_size], {255, 0, 0, 255});
+                    std::vector<uint8_t> red_r(r[3].begin(), r[3].end());
+                    uint8_t red = red_r[0];
+                    std::vector<uint8_t> green_g(r[4].begin(), r[4].end());
+                    uint8_t green = green_g[0];
+                    std::vector<uint8_t> blue_b(r[5].begin(), r[5].end());
+                    uint8_t blue = blue_b[0];
+                    m_camera->ProjectPoint(m_points[m_size], {red, green, blue, 255});
+                    //cout << "First: " << m_points[m_size].x  << " ; Second: " << m_points[m_size].y  << " ; Third: " << m_points[m_size].z << endl;
                     m_size++;
                 }
                 myfile.close();
