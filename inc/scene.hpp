@@ -2,17 +2,15 @@
 #include <SFML/Graphics.hpp>
 #include <camera.hpp>
 #include <object.hpp>
+#include <string>
 #include <fstream>
+#include <vector>
+#include <cstring>
+#include <sstream>
 
 using namespace std;
 
 namespace nu {
-    template<int col_count>
-    struct data_t
-    {
-        std::string name;
-        int values[col_count];
-    };
 	class Scene {
 	public:
 		Scene(int width, int height);

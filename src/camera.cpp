@@ -29,12 +29,12 @@ namespace nu {
 	}
 
 	void Camera::Clear() {
-        Fill({ 255,255,255, 255});
+        Fill({ 55,55,55, 255});
 	}
 
 	void Camera::ProjectPoint(Point p, Pixel c) {
 		// Наклон камеры на 90 градусов
-		double X = p.x;
+		double X = p.x ;
 		double Y = -p.z;
 		double Z = p.y;
 
