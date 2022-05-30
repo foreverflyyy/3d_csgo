@@ -48,16 +48,16 @@ namespace nu {
 					m_window->close();
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-				m_camera->dZ(100000.05);
+				m_camera->dZ(0.05);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-				m_camera->dZ(-100000.05);
+				m_camera->dZ(-0.05);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-				m_camera->dX(-100000.05);
+				m_camera->dX(-0.05);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-				m_camera->dX(100000.05);
+				m_camera->dX(0.05);
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 				m_camera->dPitch(-0.0125);
@@ -84,7 +84,7 @@ namespace nu {
                     std::vector<std::string> r = split(line, " ");
                     m_points[m_size].x = stod(r[0]) - 450000;
                     m_points[m_size].y = stod(r[1]) - 5000000;
-                    m_points[m_size].z = stod(r[2]) - 45;
+                    m_points[m_size].z = stod(r[2]);
                     m_camera->ProjectPoint(m_points[m_size], {255, 0, 0, 255});
                     //m_camera->ProjectPoint(m_points[m_size], {stod(r[4]), stoi(r[4]), stoi(r[5]), 255});
                     //cout << "First: " << stoi(r[3])  << " ; Second: " << stoi(r[4])  << " ; Third: " << stoi(r[5]) << endl;
