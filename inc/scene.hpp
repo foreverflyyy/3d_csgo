@@ -2,11 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include <camera.hpp>
 #include <object.hpp>
-#include <string>
-#include <fstream>
-#include <vector>
-#include <cstring>
-#include <sstream>
 
 using namespace std;
 
@@ -29,6 +24,7 @@ namespace nu {
 		std::unique_ptr<sf::Sprite> m_sprite;
 
 		Point* m_points = nullptr;
-		int m_size = 0;
+        Pixel* m_pixels = nullptr;
+        int points = 264719;
 	};
 }
