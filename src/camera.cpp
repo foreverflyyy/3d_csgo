@@ -28,15 +28,38 @@ namespace nu {
 				m_picture[i * m_width + j] = pixel;
 	}
 
+    void Camera::Aim() {
+        for (int i = 0; i < m_height; i++)
+            for (int j = 0; j < m_width; j++) {
+                if(((i <= (m_height/2)+8) && ((m_height/2)-8 <= i)) && ((j <= (m_width/2)+0.5) && ((m_width/2)-0.5 <= j)) ||
+                    ((i <= (m_height/2)+0.5) && ((m_height/2)-0.5 <= i)) && ((j <= (m_width/2)+8) && ((m_width/2)-8 <= j)))
+                    m_picture[i * m_width + j] = {0, 255, 0, 255};
+            }
+    }
+
 	void Camera::Clear() {
         Fill({ 0,0,0, 255});
+        Aim();
 	}
+
+//    void Camera::MouseWork(){
+//        int xPos = GET_X_LPARAM(lParam);
+//        int yPos = GET_Y_LPARAM(lParam);
+//    }
+    void Camera::MouseWork(){
+        sf::Vector2i globalPosition = sf::Mouse::getPosition();
+        std::cout << "X: " << globalPosition.x << "; Y: " << globalPosition.y << std::endl;
+
+        m_position.x = globalPosition.x * 0.003;
+        m_position.y = globalPosition.y * 0.003;
+        //m_position.z = 0;
+    }
 
 	void Camera::ProjectPoint(Point p, Pixel c) {
 		// Наклон камеры на 90 градусов
-		double X = p.x ;
+		double X = p.y ;
 		double Y = -p.z;
-		double Z = p.y;
+		double Z = p.x;
 
 		double a = m_angles.roll;
 		double b = m_angles.pitch;

@@ -15,6 +15,7 @@ namespace nu {
 
 		std::unique_ptr<Camera> m_camera;
         std::unique_ptr<Object> m_object;
+        std::unique_ptr<Object> m_object_2;
 
 		int m_width;
 		int m_height;
@@ -25,6 +26,10 @@ namespace nu {
 
 		Point* m_points = nullptr;
         Pixel* m_pixels = nullptr;
+
+        Point* m_points_2 = nullptr;
+        Pixel* m_pixels_2 = nullptr;
+
         int points = 264719;
 	};
 }

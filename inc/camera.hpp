@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <cmath>
+#include <SFML/Graphics.hpp>
 
 namespace nu {
 	struct Point {
@@ -27,12 +28,14 @@ namespace nu {
 
 		Pixel* Picture();
 		void Fill(Pixel pixel);
+        void Aim();
 		void Clear();
 		void ProjectPoint(Point p, Pixel c);
 		void dX(double d);
 		void dZ(double d);
 		void dRoll(double droll);
 		void dPitch(double dpitch);
+        void MouseWork();
 
 	private:
 		int m_width;

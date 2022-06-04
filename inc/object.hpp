@@ -1,11 +1,11 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <camera.hpp>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <cstring>
 #include <sstream>
+#include <cmath>
 
 using namespace std;
 
@@ -16,7 +16,10 @@ namespace nu {
         ~Object();
         Pixel* getPixels();
         Point* getPoints();
-        void Read();
+        void ReadFile();
+        void ReadSemiSphere(double first, double second, double third);
+        void ReadCicle();
+        void randomCicle();
 
     private:
         std::unique_ptr<Camera> m_camera;

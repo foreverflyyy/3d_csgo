@@ -15,6 +15,7 @@ namespace nu {
 		m_camera = std::make_unique<Camera>(m_width, m_height, intrinsic, position, angles);
 
         m_object = std::make_unique<Object>(points);
+        m_object_2 = std::make_unique<Object>(points);
 	}
 	Scene::~Scene() {
 		if (m_points != nullptr)
@@ -24,7 +25,9 @@ namespace nu {
     void Scene::LifeCycle() {
 		//double y0 = 1;
 
-        m_object->Read();
+        m_object_2->ReadFile();
+        //m_object->randomCicle();
+        //m_object->ReadSemiSphere(5.9, -18.8, 7.4);
 
 		while (m_window->isOpen()) {
 			sf::Event event;
@@ -32,37 +35,50 @@ namespace nu {
 				if (event.type == sf::Event::Closed)
 					m_window->close();
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-				m_camera->dZ(0.55);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-				m_camera->dZ(-0.55);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-				m_camera->dX(-0.55);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-				m_camera->dX(0.55);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				m_camera->dPitch(-0.05525);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				m_camera->dPitch(0.05125);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				m_camera->dRoll(-0.05115);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				m_camera->dRoll(0.05115);
-			}
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+                m_camera->dZ(0.35);
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+                m_camera->dZ(-0.35);
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+                m_camera->dX(-0.35);
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+                m_camera->dX(0.35);
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+                m_camera->dPitch(-0.38);
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+                m_camera->dPitch(0.38);
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+                m_camera->dRoll(-0.38);
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+                m_camera->dRoll(0.38);
+            }
+
+            m_object->randomCicle();
 
             m_points = m_object->getPoints();
             m_pixels = m_object->getPixels();
 
-            for (int i = 0; i < points; i++)
-                m_camera->ProjectPoint(m_points[i], { m_pixels[i].r, m_pixels[i].g ,m_pixels[i].b, m_pixels[i].a });
+            m_points_2 = m_object_2->getPoints();
+            m_pixels_2 = m_object_2->getPixels();
 
+            for (int i = 0; i < points; i++)
+                m_camera->ProjectPoint(m_points[i], { 255, 0 ,0, 255 });
+
+            for (int i = 0; i < points; i++)
+                m_camera->ProjectPoint(m_points_2[i], { m_pixels_2[i].r, m_pixels_2[i].g ,m_pixels_2[i].b, 255 });
+
+            //проверка нажали ли мы на кнопку мыши
+            //if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){}
+
+
+            m_camera->MouseWork();
 
             m_texture->update((uint8_t*)m_camera->Picture(), 1920, 1080, 0, 0);
 			m_camera->Clear();
