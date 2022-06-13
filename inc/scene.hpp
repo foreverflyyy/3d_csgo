@@ -3,6 +3,9 @@
 #include <camera.hpp>
 #include <object.hpp>
 
+#include <thread>
+#include <chrono>
+
 using namespace std;
 
 namespace nu {
@@ -11,6 +14,9 @@ namespace nu {
 		Scene(int width, int height);
 		~Scene();
 		void LifeCycle();
+        void CreateFence();
+        void CreateAWP();
+
 	private:
 
 		std::unique_ptr<Camera> m_camera;
@@ -21,8 +27,13 @@ namespace nu {
 		int m_height;
 
 		std::unique_ptr<sf::RenderWindow> m_window;
+        std::unique_ptr<sf::Image> icon;
 		std::unique_ptr<sf::Texture> m_texture;
+        std::unique_ptr<sf::Texture> m_texture2;
+        std::unique_ptr<sf::Texture> m_texture3;
 		std::unique_ptr<sf::Sprite> m_sprite;
+        std::unique_ptr<sf::Sprite> m_sprite2;
+        std::unique_ptr<sf::Sprite> m_sprite3;
 
 		Point* m_points = nullptr;
         Pixel* m_pixels = nullptr;

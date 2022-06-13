@@ -46,13 +46,26 @@ namespace nu {
 //        int xPos = GET_X_LPARAM(lParam);
 //        int yPos = GET_Y_LPARAM(lParam);
 //    }
-    void Camera::MouseWork(){
-        sf::Vector2i globalPosition = sf::Mouse::getPosition();
-        std::cout << "X: " << globalPosition.x << "; Y: " << globalPosition.y << std::endl;
 
-        m_position.x = globalPosition.x * 0.003;
-        m_position.y = globalPosition.y * 0.003;
+    void Camera::MouseWork(){
+
+        sf::Vector2i globalPosition = sf::Mouse::getPosition();
+        //std::cout << "X: " << globalPosition.x << "; Y: " << globalPosition.y << std::endl;
+
+        //m_position.x = globalPosition.x * 0.003;
+        //m_position.y = globalPosition.y * 0.003;
         //m_position.z = 0;
+
+
+        //m_angles.pitch = globalPosition.y * 0.003;
+        //m_angles.roll = globalPosition.x * 0.003;
+        m_angles.pitch = globalPosition.x * 0.003 - 350;
+        m_angles.roll = globalPosition.y * 0.003 + 250;
+
+
+        // если будет заходить куда не надо можем установить сами расположение
+        //sf::Mouse::setPosition(sf::Vector2i(10, 50));
+        //sf::Mouse::setPosition(sf::Vector2i(10, 50), window); // window is a sf::Window
     }
 
 	void Camera::ProjectPoint(Point p, Pixel c) {

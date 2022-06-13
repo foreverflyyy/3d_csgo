@@ -17,7 +17,16 @@ include_directories("inc/")
 include_directories("ext/SFML/include/")	# добавляем директории
 link_directories("ext/SFML/lib/")
 
-add_executable("${PROJECT_NAME}" main.cpp inc/scene.hpp src/scene.cpp inc/camera.hpp src/object.cpp inc/object.hpp src/camera.cpp inc/matrix.hpp)
+add_executable("${PROJECT_NAME}"
+		main.cpp
+		inc/scene.hpp
+		src/scene.cpp
+		inc/camera.hpp
+		src/object.cpp
+		inc/object.hpp
+		src/camera.cpp
+		inc/matrix.hpp
+		img/App.rc)
 	
 						
 target_link_libraries("${PROJECT_NAME}" 
@@ -33,3 +42,6 @@ target_link_libraries("${PROJECT_NAME}"
 						optimized sfml-audio-s)
 	
 target_link_libraries("${PROJECT_NAME}" opengl32 freetype winmm gdi32 openal32 flac vorbisenc vorbisfile vorbis ogg)
+
+file(COPY "img" DESTINATION "/")
+##file(COPY "fonts" DESTINATION "/")

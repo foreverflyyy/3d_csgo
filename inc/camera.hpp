@@ -1,7 +1,10 @@
 #pragma once
 #include <iostream>
 #include <cmath>
+//#include <windows.h>
 #include <SFML/Graphics.hpp>
+
+using namespace sf;
 
 namespace nu {
 	struct Point {
