@@ -196,6 +196,7 @@ namespace nu::math {
     using Vec2i = Matrix<int, 2, 1>;
     using Vec2d = Matrix<double, 2, 1>;
     using Vec3d = Matrix<double, 3, 1>;
+    using Vec13d = Matrix<double, 1, 3>;
     using Mat22i = Matrix<int, 2, 2>;
     using Mat22d = Matrix<double, 2, 2>;
     using Mat33i = Matrix<int, 3, 3>;

@@ -8,6 +8,8 @@
 #include <cmath>
 
 using namespace std;
+using nu::math::Mat33d;
+using nu::math::Vec13d;
 
 namespace nu {
     class Object {
@@ -17,9 +19,11 @@ namespace nu {
         Pixel* getPixels();
         Point* getPoints();
         void ReadFile();
-        void ReadSemiSphere(double first, double second, double third);
-        void ReadCicle();
-        void randomCicle();
+        //void ReadSemiSphere(double first, double second, double third);
+        //void ReadCicle();
+        Point* randomMonkey();
+        void ReadMonkey();
+
 
     private:
         std::unique_ptr<Camera> m_camera;

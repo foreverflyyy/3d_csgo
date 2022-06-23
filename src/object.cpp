@@ -54,7 +54,65 @@ namespace nu {
         } else
             std::cout << "fooey\n";
     }
-    void Object::ReadSemiSphere(double first, double second, double third) {
+    void Object::ReadMonkey() {
+        m_size = 0;
+        std::string line;
+        std::ifstream myfile( "img/variant.xyz");
+
+        /*Mat33d rotateZ({ {
+                                {cos(3.14), -sin(3.14), 0},
+                                {sin(3.14),cos(3.14), 0},
+                                {0, 0, 1}
+                        } });*/
+
+        /*Mat33d rotateX({ {
+                                {1, 0, 0},
+                                {0,cos(3.14), -sin(3.14)},
+                                {0, sin(3.14), cos(3.14)}
+                        } });*/
+
+        /*Mat33d rotateY({ {
+                                {cos(3.14), 0, sin(3.14)},
+                                {0,1, 0},
+                                {-sin(3.14), 0, cos(3.14)}
+                        } });*/
+
+        Mat33d rotateX({ {
+                                {1, 0, 0},
+                                {0,cos(3.14/2), sin(3.14/2)},
+                                {0, -sin(3.14/2), cos(3.14/2)}
+                        } });
+        Mat33d rotateZ({ {
+                                {cos(3*3.14/4), -sin(3*3.14/4), 0},
+                                {sin(3*3.14/4),cos(3*3.14/4), 0},
+                                {0, 0, 1}
+                        } });
+
+        if (myfile){
+            while (getline( myfile, line )){
+                std::vector<std::string> r = split(line, " ");
+
+                m_points[m_size].x = stod(r[0])+40;
+                m_points[m_size].y = stod(r[1])+10; //+ - отдаляем от дом: - приближаем
+                m_points[m_size].z = stod(r[2])-50;
+
+                Vec13d value({m_points[m_size].x, m_points[m_size].y, m_points[m_size].z});
+
+                Vec13d P_res = value*rotateX*rotateZ;
+
+                m_points[m_size].x = P_res.get(0, 0);
+                m_points[m_size].y = P_res.get(0, 1);
+                m_points[m_size].z = P_res.get(0, 2);
+
+                m_pixels[m_size] = {255, 0, 0, 255};
+                m_size++;
+            }
+            myfile.close();
+        } else
+            std::cout << "fooey\n";
+    }
+
+    /*void Object::ReadSemiSphere(double first, double second, double third) {
         m_size = 0;
         //double y0 = 1;
         //y0 += 0.02;
@@ -67,9 +125,9 @@ namespace nu {
                 m_points[m_size].z = r * cos(teta) + third;
                 m_size++;
             }
-    }
+    }*/
 
-    void Object::ReadCicle() {
+    /*void Object::ReadCicle() {
         m_size = 0;
         //double y0 = 1;
         //y0 += 0.02;
@@ -79,25 +137,51 @@ namespace nu {
             m_points[m_size].y = r * sin(fi);
             m_size++;
         }
-    }
+    }*/
 
-    void Object::randomCicle(){
-        srand(time(0));
+    Point* Object::randomMonkey(){
+
+
+        /*srand(time(0));
         int random = rand() % 6 +1;
-
         if(random == 1){
-            ReadSemiSphere(11.3, 1.3, 7.2);
+            for(int i = 0; i < 508; i++){
+                m_points->x += 11.3;
+                m_points->y += 1.3;
+                m_points->z += 7.2;
+            }
         } else if(random == 2){
-            ReadSemiSphere(12.3, 7, 7);
+            for(int i = 0; i < 508; i++){
+                m_points->x += 12.3;
+                m_points->y += 7;
+                m_points->z += 7;
+            }
         } else if(random == 3){
-            ReadSemiSphere(10, -4.5, 7.3);
+            for(int i = 0; i < 508; i++){
+                m_points->x += 10;
+                m_points->y += -4.5;
+                m_points->z += 7.3;
+            }
         } else if(random == 4){
-            ReadSemiSphere(9.2, -7.3, 7.4);
+            for(int i = 0; i < 508; i++){
+                m_points->x += 9.2;
+                m_points->y += -7.3;
+                m_points->z += 7.4;
+            }
         } else if(random == 5){
-            ReadSemiSphere(7.5, -13, 7.4);
+            for(int i = 0; i < 508; i++){
+                m_points->x += 7.5;
+                m_points->y += -13;
+                m_points->z += 7.4;
+            }
         } else if(random == 6){
-            ReadSemiSphere(5.9, -18.8, 7.4);
-        }
+            for(int i = 0; i < 508; i++){
+                m_points->x += 5.9;
+                m_points->y += -18.8;
+                m_points->z += 7.4;
+            }
+        }*/
+        return m_points;
     }
 
     Point* Object::getPoints() {

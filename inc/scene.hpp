@@ -35,7 +35,7 @@ namespace nu {
 		Scene(int width, int height);
 		~Scene();
 		void LifeCycle();
-        void CreateFence();
+        void CreateTerror();
         void CreateAWP();
 
         Clock clock;

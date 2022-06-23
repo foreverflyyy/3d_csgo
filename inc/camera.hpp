@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <matrix.hpp>
 #include <cmath>
 //#include <windows.h>
 #include <SFML/Graphics.hpp>

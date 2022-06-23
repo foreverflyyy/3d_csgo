@@ -1,9 +1,9 @@
 #include <camera.hpp>
-#include <matrix.hpp>
 
 namespace nu {
 	using nu::math::Mat33d;
 	using nu::math::Vec3d;
+
 
 	Camera::Camera(int width, int height, Intrinsic intrinsic, Point position, Angles angles) {
 		m_height = height;
@@ -72,7 +72,9 @@ namespace nu {
     }
 
 	void Camera::ProjectPoint(Point p, Pixel c) {
-		// Наклон камеры на 90 градусов
+
+
+        // Наклон камеры на 90 градусов
 		double X = p.y ;
 		double Y = -p.z;
 		double Z = p.x;

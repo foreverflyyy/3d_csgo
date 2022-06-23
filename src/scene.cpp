@@ -22,36 +22,23 @@ namespace nu {
 			delete[] m_points;
 	}
 
-    void Scene::CreateFence(){
-        m_texture2 = std::make_unique<sf::Texture>();
-        // m_texture2->create(130, 66);
-        //m_sprite = std::make_unique<sf::Sprite>(*m_texture2);
-
-        m_texture2->loadFromFile("img/fnc.png", sf::IntRect(10, 10, 130, 66));
-        m_sprite2 = std::make_unique<sf::Sprite>(*m_texture2);
-    }
     void Scene::CreateAWP(){
         m_texture3 = std::make_unique<sf::Texture>();
-        // m_texture2->create(130, 66);
-        //m_sprite = std::make_unique<sf::Sprite>(*m_texture2);
 
         m_texture3->loadFromFile("img/awp_top.png", sf::IntRect(0, 0, 320, 180));
         m_sprite3 = std::make_unique<sf::Sprite>(*m_texture3);
 
         m_sprite3->setPosition(sf::Vector2f(1050, 530));
         m_sprite3->scale(sf::Vector2f(3.f, 3.f));
-
-        //m_sprite3->setPosition(sf::Vector2f(1200, 600));
-        //m_sprite3->scale(sf::Vector2f(3.f, 3.f));
     }
 
     void Scene::LifeCycle() {
 
+        m_object->ReadMonkey();
         m_object_2->ReadFile();
 
         //взять в руки авп
         CreateAWP();
-
         //CreateFence();
 
         //скрывает курсор
@@ -87,38 +74,21 @@ namespace nu {
             time = time/800; //скорость игры
             //std::cout << time << "\n";
 
-             //-0,1 это скорость, умножаем её на наше время и получаем пройденное расстояние
-
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
                 m_camera->dZ(0.35);
-
-
-                //m_sprite->move(0, -0.1*time);
-                //m_sprite->setTextureRect(IntRect(0, 288, 96, 96));
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
                 m_camera->dZ(-0.35);
-                //m_sprite->move(0, 0.1*time);
-                //m_sprite->setTextureRect(IntRect(0, 0, 96, 96));
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
                 m_camera->dX(-0.35);
-                //m_sprite->move(-0.1*time, 0);
-                //m_sprite->setTextureRect(IntRect(0, 96, 96, 96));
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
                 m_camera->dX(0.35);
-                //m_sprite->move(0.1*time, 0);
-                //->setTextureRect(IntRect(0, 192, 96, 96));
             }
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
                 m_sprite3->setPosition(sf::Vector2f(1150, 630));
-
-                /*CurrentFrame += 0.005*time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
-                if (CurrentFrame > 3) CurrentFrame -= 3; //если пришли к третьему кадру - откидываемся назад.
-                m_sprite3->setTextureRect(IntRect(96 * int(CurrentFrame), 192, 96, 96)); //проходимся по координатам Х. получается 0, 96,96*2 и опять 0
-                m_sprite3->move(0.1*time, 0);//происходит само движение персонажа вправо*/
             }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Right)){
                 m_sprite3->setPosition(sf::Vector2f(1050, 530));
@@ -133,9 +103,7 @@ namespace nu {
             //счётчик рисуем
             text_score.setString(std::string("Score: ") + std::to_string(score));
 
-            m_object->randomCicle();
-
-            m_points = m_object->getPoints();
+            m_points = m_object->randomMonkey();;
             m_pixels = m_object->getPixels();
 
             m_points_2 = m_object_2->getPoints();
