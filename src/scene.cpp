@@ -46,22 +46,34 @@ namespace nu {
     }
 
     void Scene::LifeCycle() {
-		//double y0 = 1;
 
         m_object_2->ReadFile();
 
-        //CreateFence();
+        //взять в руки авп
         CreateAWP();
 
-        //m_object->randomCicle();
-        //m_object->ReadSemiSphere(5.9, -18.8, 7.4);
+        //CreateFence();
 
         //скрывает курсор
         m_window->setMouseCursorVisible(false);
 
-//        if (!icon->loadFromFile("img/icon.ico"))
-//            throw std::runtime_error("Error img icon wops");
-//        m_window->setIcon(32, 32, icon->getPixelsPtr());
+        //добавляем текст
+        FPS fps;
+        sf::Font font;
+        if (!font.loadFromFile("fonts/arial.ttf")){
+            throw std::runtime_error("ERROR: font was not loaded.");
+        }
+        sf::Text text_fps;
+        text_fps.setFont(font);
+        text_fps.setCharacterSize(24);
+        text_fps.setPosition(10, 950);
+        text_fps.setFillColor(sf::Color::White);
+
+        sf::Text text_score;
+        text_score.setFont(font);
+        text_score.setCharacterSize(24);
+        text_score.setPosition(10, 10);
+        text_score.setFillColor(sf::Color::White);
 
 		while (m_window->isOpen()) {
 			sf::Event event;
@@ -69,29 +81,57 @@ namespace nu {
 				if (event.type == sf::Event::Closed)
 					m_window->close();
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-                m_camera->dZ(0.35);
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-                m_camera->dZ(-0.35);
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-                m_camera->dX(-0.35);
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-                m_camera->dX(0.35);
-            }
+
+            float time = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
+            clock.restart(); //перезагружает время
+            time = time/800; //скорость игры
+            //std::cout << time << "\n";
+
+             //-0,1 это скорость, умножаем её на наше время и получаем пройденное расстояние
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
                 m_camera->dZ(0.35);
+
+
+                //m_sprite->move(0, -0.1*time);
+                //m_sprite->setTextureRect(IntRect(0, 288, 96, 96));
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+                m_camera->dZ(-0.35);
+                //m_sprite->move(0, 0.1*time);
+                //m_sprite->setTextureRect(IntRect(0, 0, 96, 96));
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+                m_camera->dX(-0.35);
+                //m_sprite->move(-0.1*time, 0);
+                //m_sprite->setTextureRect(IntRect(0, 96, 96, 96));
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+                m_camera->dX(0.35);
+                //m_sprite->move(0.1*time, 0);
+                //->setTextureRect(IntRect(0, 192, 96, 96));
             }
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
                 m_sprite3->setPosition(sf::Vector2f(1150, 630));
+
+                /*CurrentFrame += 0.005*time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
+                if (CurrentFrame > 3) CurrentFrame -= 3; //если пришли к третьему кадру - откидываемся назад.
+                m_sprite3->setTextureRect(IntRect(96 * int(CurrentFrame), 192, 96, 96)); //проходимся по координатам Х. получается 0, 96,96*2 и опять 0
+                m_sprite3->move(0.1*time, 0);//происходит само движение персонажа вправо*/
             }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Right)){
                 m_sprite3->setPosition(sf::Vector2f(1050, 530));
             }
+
+            //фпс рисуем
+            fps.update();
+            std::ostringstream ss;
+            ss << fps.getFPS();
+            text_fps.setString(ss.str());
+
+            //счётчик рисуем
+            text_score.setString(std::string("Score: ") + std::to_string(score));
 
             m_object->randomCicle();
 
@@ -110,7 +150,7 @@ namespace nu {
             //проверка нажали ли мы на кнопку мыши
             //if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){}
 
-            m_camera->MouseWork();
+            m_camera->MouseWork(time);
 
             m_texture->update((uint8_t*)m_camera->Picture(), 1920, 1080, 0, 0);
 			m_camera->Clear();
@@ -120,12 +160,38 @@ namespace nu {
 			m_window->draw(*m_sprite);
             //m_window->draw(*m_sprite2);
             m_window->draw(*m_sprite3);
+            m_window->draw(text_fps);
+            m_window->draw(text_score);
 
 			m_window->display();
+
 
 		}
 	}
 }
+
+/*
+// Проверка столкновения
+for (int i = 0; i < gribs.size(); i++) {
+int X = mario->GetX();
+int Y = mario->GetY();
+float R = mario->GetR();
+
+int x = gribs[i]->GetX();
+int y = gribs[i]->GetY();
+float r = gribs[i]->GetR();
+
+float d = sqrt((X - x) * (X - x) + (Y - y) * (Y - y));
+
+if (R + r >= d) {
+lose = true;
+//                    std::cout << "You loser!";
+//window.close();
+//                delete gribs[i];
+//                gribs.erase(gribs.begin() + i);
+//                i--;
+}
+}*/
 
 /*
 public:

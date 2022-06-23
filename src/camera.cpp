@@ -47,21 +47,24 @@ namespace nu {
 //        int yPos = GET_Y_LPARAM(lParam);
 //    }
 
-    void Camera::MouseWork(){
+    void Camera::MouseWork(float time){
 
         sf::Vector2i globalPosition = sf::Mouse::getPosition();
         //std::cout << "X: " << globalPosition.x << "; Y: " << globalPosition.y << std::endl;
 
-        //m_position.x = globalPosition.x * 0.003;
-        //m_position.y = globalPosition.y * 0.003;
-        //m_position.z = 0;
+        //float time = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
+        //clock.restart(); //перезагружает время
+        //time = time/800; //скорость игры
 
+        //-0,1 это скорость, умножаем её на наше время и получаем пройденное расстояние
+        //m_sprite->move(0, -0.1*time); m_angles.pitch = (globalPosition.x * 0.003 - 350) + 0.005 * time;
 
-        //m_angles.pitch = globalPosition.y * 0.003;
-        //m_angles.roll = globalPosition.x * 0.003;
-        m_angles.pitch = globalPosition.x * 0.003 - 350;
-        m_angles.roll = globalPosition.y * 0.003 + 250;
-
+        if(global_x != globalPosition.x || global_y != globalPosition.y){
+            m_angles.pitch = (globalPosition.x * 0.003 - 350);
+            m_angles.roll = (globalPosition.y * 0.003 + 250);
+        }
+        global_x = globalPosition.x;
+        global_y = globalPosition.y;
 
         // если будет заходить куда не надо можем установить сами расположение
         //sf::Mouse::setPosition(sf::Vector2i(10, 50));
@@ -124,11 +127,11 @@ namespace nu {
 		m_position.x += d * cos(-m_angles.pitch);
 		m_position.y += 0;
 		m_position.z += d * sin(-m_angles.pitch);
-	}
+    }
 
 	void Camera::dZ(double d) {
 		m_position.x += d * sin(m_angles.pitch);
-		m_position.y += d * sin(m_angles.roll);
+		//m_position.y += d * sin(m_angles.roll);
 		m_position.z += d * cos(m_angles.pitch);
 	}
 

@@ -2,13 +2,34 @@
 #include <SFML/Graphics.hpp>
 #include <camera.hpp>
 #include <object.hpp>
-
 #include <thread>
 #include <chrono>
 
 using namespace std;
 
 namespace nu {
+    class FPS {
+    public:
+        FPS() : mFrame(0), mFps(0) {}
+        const unsigned int getFPS() const { return mFps; }
+
+    private:
+        unsigned int mFrame;
+        unsigned int mFps;
+        sf::Clock mClock;
+
+    public:
+        void update(){
+            if (mClock.getElapsedTime().asSeconds() >= 1.f){
+                mFps = mFrame;
+                mFrame = 0;
+                mClock.restart();
+            }
+
+            ++mFrame;
+        }
+    };
+
 	class Scene {
 	public:
 		Scene(int width, int height);
@@ -16,6 +37,9 @@ namespace nu {
 		void LifeCycle();
         void CreateFence();
         void CreateAWP();
+
+        Clock clock;
+        float CurrentFrame = 0;
 
 	private:
 
@@ -37,6 +61,8 @@ namespace nu {
 
 		Point* m_points = nullptr;
         Pixel* m_pixels = nullptr;
+
+        int score = 0;
 
         Point* m_points_2 = nullptr;
         Pixel* m_pixels_2 = nullptr;

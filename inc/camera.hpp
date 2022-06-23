@@ -38,13 +38,19 @@ namespace nu {
 		void dZ(double d);
 		void dRoll(double droll);
 		void dPitch(double dpitch);
-        void MouseWork();
+        void MouseWork(float time);
 
 	private:
 		int m_width;
 		int m_height;
 		Pixel* m_picture;
 		Intrinsic m_intrinsic;
+
+        int global_y;
+        int global_x;
+
+        //управляем временем
+        Clock clock;
 
 		Point m_position;
 		Angles m_angles;
