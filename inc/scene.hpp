@@ -35,38 +35,41 @@ namespace nu {
 		Scene(int width, int height);
 		~Scene();
 		void LifeCycle();
-        void CreateTerror();
         void CreateAWP();
+        void Shot();
+        void DrawShot();
 
+        float currentFrame = 0;
         Clock clock;
-        float CurrentFrame = 0;
 
 	private:
 
 		std::unique_ptr<Camera> m_camera;
         std::unique_ptr<Object> m_object;
-        std::unique_ptr<Object> m_object_2;
+
+        bool shot = false;
+
+        float presentShotX = 1080;
+        float presentShotY = 603;
+        float time;
+        float timer = 0;
 
 		int m_width;
 		int m_height;
 
 		std::unique_ptr<sf::RenderWindow> m_window;
-        std::unique_ptr<sf::Image> icon;
 		std::unique_ptr<sf::Texture> m_texture;
-        std::unique_ptr<sf::Texture> m_texture2;
-        std::unique_ptr<sf::Texture> m_texture3;
+        std::unique_ptr<sf::Texture> m_texture_2;
+        std::unique_ptr<sf::Texture> m_texture_3;
 		std::unique_ptr<sf::Sprite> m_sprite;
-        std::unique_ptr<sf::Sprite> m_sprite2;
-        std::unique_ptr<sf::Sprite> m_sprite3;
+        std::unique_ptr<sf::Sprite> m_sprite_2;
+        std::unique_ptr<sf::Sprite> m_sprite_3;
 
 		Point* m_points = nullptr;
         Pixel* m_pixels = nullptr;
 
         int score = 0;
 
-        Point* m_points_2 = nullptr;
-        Pixel* m_pixels_2 = nullptr;
-
-        int points = 264719;
+        int points = 391942;
 	};
 }

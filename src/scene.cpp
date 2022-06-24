@@ -15,7 +15,6 @@ namespace nu {
 		m_camera = std::make_unique<Camera>(m_width, m_height, intrinsic, position, angles);
 
         m_object = std::make_unique<Object>(points);
-        m_object_2 = std::make_unique<Object>(points);
 	}
 	Scene::~Scene() {
 		if (m_points != nullptr)
@@ -23,23 +22,53 @@ namespace nu {
 	}
 
     void Scene::CreateAWP(){
-        m_texture3 = std::make_unique<sf::Texture>();
+        m_texture_2 = std::make_unique<sf::Texture>();
 
-        m_texture3->loadFromFile("img/awp_top.png", sf::IntRect(0, 0, 320, 180));
-        m_sprite3 = std::make_unique<sf::Sprite>(*m_texture3);
+        m_texture_2->loadFromFile("img/awp_top.png", sf::IntRect(0, 0, 320, 180));
+        m_sprite_2 = std::make_unique<sf::Sprite>(*m_texture_2);
 
-        m_sprite3->setPosition(sf::Vector2f(1050, 530));
-        m_sprite3->scale(sf::Vector2f(3.f, 3.f));
+        m_sprite_2->setPosition(sf::Vector2f(1050, 530));
+        m_sprite_2->scale(sf::Vector2f(3.f, 3.f));
+    }
+    void Scene::Shot(){
+        shot = true;
+        presentShotX = 1080;
+        presentShotY = 610;
+        DrawShot();
+
+        //float newX = 948;
+        //float newY = 520;
+
+        presentShotX += 0.005*time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
+        if (presentShotX > 3) presentShotX -= 3;
+        m_sprite_3->setTextureRect(IntRect(96 * int(presentShotX), 96, 96, 96)); //проходимся по координатам Х. получается начинаем рисование с координаты Х равной 0,96,96*2, и опять 0
+        m_sprite_3->move(-0.1*time, 0);//происходит само движение персонажа влево
+
+        shot = false;
+
+        //m_sprite_3->setPosition(sf::Vector2f(1080, 610));
+        //m_sprite_3->setPosition(sf::Vector2f(948, 520));
+    }
+
+    void Scene::DrawShot(){
+        m_texture_3 = std::make_unique<sf::Texture>();
+
+        m_texture_3->loadFromFile("img/shot.png", sf::IntRect(0, 0, 130, 130));
+        m_sprite_3 = std::make_unique<sf::Sprite>(*m_texture_3);
+
+        m_sprite_3->setPosition(sf::Vector2f(presentShotX-timer, presentShotY-timer*0.68));
+        m_sprite_3->scale(sf::Vector2f(1/2.f, 1/2.f));
     }
 
     void Scene::LifeCycle() {
 
-        m_object->ReadMonkey();
-        m_object_2->ReadFile();
+
+        m_object->ReadFile();
+        m_object->ReadTerror();
+        m_object->ReadSmallTerror();
 
         //взять в руки авп
         CreateAWP();
-        //CreateFence();
 
         //скрывает курсор
         m_window->setMouseCursorVisible(false);
@@ -64,15 +93,25 @@ namespace nu {
 
 		while (m_window->isOpen()) {
 			sf::Event event;
-			while (m_window->pollEvent(event))
-				if (event.type == sf::Event::Closed)
-					m_window->close();
+			while (m_window->pollEvent(event)) {
+                if (event.type == sf::Event::Closed)
+                    m_window->close();
+            }
 
+            if(timer>=1){
+                timer+=24;
+                m_sprite_3->setPosition(sf::Vector2f(presentShotX-timer, presentShotY-timer*0.68));
+                m_sprite_2->setPosition(sf::Vector2f(1150-timer, 630-timer*0.68));
+            }
+            if(timer >= 132){
+                timer = 0;
+                shot = false;
+            }
 
-            float time = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
-            clock.restart(); //перезагружает время
-            time = time/800; //скорость игры
-            //std::cout << time << "\n";
+            //время считаем
+            time = clock.getElapsedTime().asMicroseconds();
+            clock.restart();
+            time = time / 800;
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
                 m_camera->dZ(0.35);
@@ -88,10 +127,9 @@ namespace nu {
             }
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-                m_sprite3->setPosition(sf::Vector2f(1150, 630));
-            }
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Right)){
-                m_sprite3->setPosition(sf::Vector2f(1050, 530));
+                    shot = true;
+                    DrawShot();
+                    timer = 1;
             }
 
             //фпс рисуем
@@ -103,22 +141,13 @@ namespace nu {
             //счётчик рисуем
             text_score.setString(std::string("Score: ") + std::to_string(score));
 
-            m_points = m_object->randomMonkey();;
+            m_points = m_object->getPoints();
             m_pixels = m_object->getPixels();
 
-            m_points_2 = m_object_2->getPoints();
-            m_pixels_2 = m_object_2->getPixels();
-
             for (int i = 0; i < points; i++)
-                m_camera->ProjectPoint(m_points[i], { 255, 0 ,0, 255 });
+                m_camera->ProjectPoint(m_points[i], { m_pixels[i].r, m_pixels[i].g ,m_pixels[i].b, 255 });
 
-            for (int i = 0; i < points; i++)
-                m_camera->ProjectPoint(m_points_2[i], { m_pixels_2[i].r, m_pixels_2[i].g ,m_pixels_2[i].b, 255 });
-
-            //проверка нажали ли мы на кнопку мыши
-            //if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){}
-
-            m_camera->MouseWork(time);
+            m_camera->MouseWork();
 
             m_texture->update((uint8_t*)m_camera->Picture(), 1920, 1080, 0, 0);
 			m_camera->Clear();
@@ -126,8 +155,8 @@ namespace nu {
 
 			m_window->clear();
 			m_window->draw(*m_sprite);
-            //m_window->draw(*m_sprite2);
-            m_window->draw(*m_sprite3);
+            m_window->draw(*m_sprite_2);
+            if(shot) m_window->draw(*m_sprite_3);
             m_window->draw(text_fps);
             m_window->draw(text_score);
 
@@ -159,300 +188,4 @@ lose = true;
 //                gribs.erase(gribs.begin() + i);
 //                i--;
 }
-}*/
-
-/*
-public:
-    float w, h, dx, dy,x,y, speed;
-    int dir, playerScore, health;
-    bool life, isMove,isSelect;//добавили переменные состояния движения и выбора объекта
-    String File;
-    Image image;
-    Texture texture;
-    Sprite sprite;
-    Player(String F, float X, float Y, float W, float H){
-        dir = 0; speed = 0; playerScore = 0; health = 100; dx = 0; dy = 0;
-        life = true; isMove = false; isSelect = false;
-        File = F;
-        w = W; h = H;
-        image.loadFromFile("images/" + File);
-        image.createMaskFromColor(Color(0, 0, 255));
-        texture.loadFromImage(image);
-        sprite.setTexture(texture);
-
-        x = X; y = Y;
-        sprite.setTextureRect(IntRect(0, 0, w, h));
-        sprite.setOrigin(w / 2, h / 2);
-    }
-    void update(float time)
-    {
-        switch (dir)
-        {
-            case 0: dx = speed; dy = 0; break;
-            case 1: dx = -speed; dy = 0; break;
-            case 2: dx = 0; dy = speed; break;
-            case 3: dx = 0; dy = -speed; break;
-        }
-
-        x += dx*time;
-        y += dy*time;
-        if (!isMove) speed = 0;
-        sprite.setPosition(x, y);
-        interactionWithMap();
-        if (health <= 0){ life = false; }
-
-    }
-
-    float getWidth(){//получить ширину объека
-        return w;
-    }
-    void setWidth(float width){//установить ширину объекта
-        w = width;
-    }
-
-    float getHeight(){//взять ширину объекта
-        return h;
-    }
-    void setHeight(float height){//задать ширину объекта
-        h = height;
-    }
-
-    float getplayercoordinateX(){
-        return x;
-    }
-    float getplayercoordinateY(){
-        return y;
-    }
-
-
-    void moveToCursor(Window window){
-
-    }
-
-    void interactionWithMap()
-    {
-
-        for (int i = y / 32; i < (y + h) / 32; i++)
-            for (int j = x / 32; j<(x + w) / 32; j++)
-            {
-                if (TileMap[i][j] == '0')
-                {
-                    if (dy>0)
-                    {
-                        y = i * 32 - h;
-                    }
-                    if (dy<0)
-                    {
-                        y = i * 32 + 32;
-                    }
-                    if (dx>0)
-                    {
-                        x = j * 32 - w;
-                    }
-                    if (dx < 0)
-                    {
-                        x = j * 32 + 32;
-                    }
-                }
-
-                if (TileMap[i][j] == 's') {
-                    playerScore++;
-                    TileMap[i][j] = ' ';
-                }
-
-                if (TileMap[i][j] == 'f') {
-                    health -= 40;
-                    TileMap[i][j] = ' ';
-                }
-
-                if (TileMap[i][j] == 'h') {
-                    health += 20;
-                    TileMap[i][j] = ' ';
-                }
-
-            }
-    }
-
-};
-
-class SpriteManager{//это задел на следующие уроки,прошу не обращать внимания на эти изменения)
-public:
-    Image image;
-    Texture texture;
-    Sprite sprite;
-    String name;
-    String file;
-    int widthOfSprite;
-    int heightOfSprite;
-    SpriteManager(String File,String Name){
-        file = File;
-        name = Name;
-        image.loadFromFile("images/" + file);
-        texture.loadFromImage(image);
-        sprite.setTexture(texture);
-    }
-};
-
-
-int main()
-{
-
-
-    RenderWindow window(VideoMode(640, 480), "Lesson 19. kychka-pc.ru");
-    view.reset(FloatRect(0, 0, 640, 480));
-
-    Font font;
-    font.loadFromFile("CyrilicOld.ttf");
-    Text text("", font, 20);
-    text.setColor(Color::Black);
-
-
-    Image map_image;
-    map_image.loadFromFile("images/map.png");
-    Texture map;
-    map.loadFromImage(map_image);
-    Sprite s_map;
-    s_map.setTexture(map);
-
-    Image quest_image;
-    quest_image.loadFromFile("images/missionbg.jpg");
-    quest_image.createMaskFromColor(Color(0, 0, 0));
-    Texture quest_texture;
-    quest_texture.loadFromImage(quest_image);
-    Sprite s_quest;
-    s_quest.setTexture(quest_texture);
-    s_quest.setTextureRect(IntRect(0, 0, 340, 510));
-    s_quest.setScale(0.6f, 0.6f);
-
-    SpriteManager playerSprite("hero.png", "Hero");//это задел на следующие уроки,прошу не обращать внимания)
-
-    Player p("heroForRotate.png", 250, 250, 136, 74);
-
-    float currentFrame = 0;
-    Clock clock;
-    float dX = 0;
-    float dY = 0;
-    int tempX = 0;//временная коорд Х.Снимаем ее после нажатия прав клав мыши
-    int tempY = 0;//коорд Y
-    float distance = 0;//это расстояние от объекта до тыка курсора
-    while (window.isOpen())
-    {
-
-        float time = clock.getElapsedTime().asMicroseconds();
-
-        clock.restart();
-        time = time / 800;
-
-        Vector2i pixelPos = Mouse::getPosition(window);//забираем коорд курсора
-        Vector2f pos = window.mapPixelToCoords(pixelPos);//переводим их в игровые (уходим от коорд окна)
-
-
-        Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-
-            if (event.type == Event::MouseButtonPressed)//если нажата клавиша мыши
-                if (event.key.code == Mouse::Left){//а именно левая
-                    if (p.sprite.getGlobalBounds().contains(pos.x, pos.y))//и при этом координата курсора попадает в спрайт
-                    {
-                        p.sprite.setColor(Color::Green);//красим спрайт в зеленый,тем самым говоря игроку,что он выбрал персонажа и может сделать ход
-                        p.isSelect = true;
-                    }
-                }
-
-
-            if (p.isSelect)//если выбрали объект
-                if (event.type == Event::MouseButtonPressed)//если нажата клавиша мыши
-                    if (event.key.code == Mouse::Right){//а именно правая
-                        p.isMove = true;//то начинаем движение
-                        p.isSelect = false;//объект уже не выбран
-                        p.sprite.setColor(Color::White);//возвращаем обычный цвет спрайту
-                        tempX = pos.x;//забираем координату нажатия курсора Х
-                        tempY = pos.y;//и Y
-
-                    }
-        }
-
-
-        if (p.isMove){
-            distance = sqrt((tempX - p.x)*(tempX - p.x) + (tempY - p.y)*(tempY - p.y));//считаем дистанцию (расстояние от точки А до точки Б). используя формулу длины вектора
-
-            if (distance > 2){//этим условием убираем дергание во время конечной позиции спрайта
-
-                p.x += 0.1*time*(tempX - p.x) / distance;//идем по иксу с помощью вектора нормали
-                p.y += 0.1*time*(tempY - p.y) / distance;//идем по игреку так же
-            }
-            else { p.isMove = false; std::cout << "priehali\n"; }//говорим что уже никуда не идем и выводим веселое сообщение в консоль
-        }
-
-
-
-
-        float dX = pos.x - p.x;//вектор , колинеарный прямой, которая пересекает спрайт и курсор
-        float dY = pos.y - p.y;//он же, координата y
-        float rotation = (atan2(dY, dX)) * 180 / 3.14159265;//получаем угол в радианах и переводим его в градусы
-        std::cout << rotation << "\n";//смотрим на градусы в консольке
-        p.sprite.setRotation(rotation);//поворачиваем спрайт на эти градусы
-
-
-        ///////////////////////////////////////////Управление персонажем с анимацией////////////////////////////////////////////////////////////////////////
-        if (p.life) {
-            if (Keyboard::isKeyPressed(Keyboard::Left)) {
-                p.dir = 1; p.speed = 0.1;
-                currentFrame += 0.005*time;
-                if (currentFrame > 3) currentFrame -= 3;
-                p.sprite.setTextureRect(IntRect(96 * int(currentFrame), 96, 96, 96));
-            }
-
-            if (Keyboard::isKeyPressed(Keyboard::Right)) {
-                p.dir = 0; p.speed = 0.1;
-                currentFrame += 0.005*time;
-                if (currentFrame > 3) currentFrame -= 3;
-                p.sprite.setTextureRect(IntRect(96 * int(currentFrame), 192, 96, 96));
-            }
-
-            if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                p.dir = 3; p.speed = 0.1;
-                currentFrame += 0.005*time;
-                if (currentFrame > 3) currentFrame -= 3;
-                p.sprite.setTextureRect(IntRect(96 * int(currentFrame), 307, 96, 96));
-            }
-
-            if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                p.dir = 2; p.speed = 0.1;
-
-                currentFrame += 0.005*time;
-                if (currentFrame > 3) currentFrame -= 3;
-                p.sprite.setTextureRect(IntRect(96 * int(currentFrame), 0, 96, 96));
-            }
-            getplayercoordinateforview(p.getplayercoordinateX(), p.getplayercoordinateY());
-        }
-
-
-        p.update(time);
-
-
-        window.setView(view);
-        window.clear();
-
-        window.getSystemHandle();
-
-        for (int i = 0; i < HEIGHT_MAP; i++)
-            for (int j = 0; j < WIDTH_MAP; j++)
-            {
-                if (TileMap[i][j] == ' ')  s_map.setTextureRect(IntRect(0, 0, 32, 32));
-                if (TileMap[i][j] == 's')  s_map.setTextureRect(IntRect(32, 0, 32, 32));
-                if ((TileMap[i][j] == '0')) s_map.setTextureRect(IntRect(64, 0, 32, 32));
-                if ((TileMap[i][j] == 'f')) s_map.setTextureRect(IntRect(96, 0, 32, 32));
-                if ((TileMap[i][j] == 'h')) s_map.setTextureRect(IntRect(128, 0, 32, 32));
-                s_map.setPosition(j * 32, i * 32);
-
-                window.draw(s_map);
-            }
-        window.draw(p.sprite);
-        window.display();
-    }
-    return 0;
 }*/

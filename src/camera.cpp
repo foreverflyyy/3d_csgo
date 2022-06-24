@@ -47,7 +47,7 @@ namespace nu {
 //        int yPos = GET_Y_LPARAM(lParam);
 //    }
 
-    void Camera::MouseWork(float time){
+    void Camera::MouseWork(){
 
         sf::Vector2i globalPosition = sf::Mouse::getPosition();
         //std::cout << "X: " << globalPosition.x << "; Y: " << globalPosition.y << std::endl;
@@ -73,20 +73,19 @@ namespace nu {
 
 	void Camera::ProjectPoint(Point p, Pixel c) {
 
-
         // Наклон камеры на 90 градусов
 		double X = p.y ;
 		double Y = -p.z;
 		double Z = p.x;
 
-		double a = m_angles.roll;
-		double b = m_angles.pitch;
-		double g = m_angles.yaw;
+        double a = m_angles.roll;
+        double b = m_angles.pitch;
+        double g = m_angles.yaw;
 
-		double cosa = cos(a);
-		double cosb = cos(b);
-		double sina = sin(a);
-		double sinb = sin(b);
+        double cosa = cos(a);
+        double cosb = cos(b);
+        double sina = sin(a);
+        double sinb = sin(b);
 
 		Mat33d R({ {
 						  {cosb, 0, -sinb},
@@ -123,7 +122,8 @@ namespace nu {
 		if (u >= 0 && u < m_width && v >= 0 && v < m_height) {
 			m_picture[(int)v * m_width + (int)u] = c;
 		}
-	}
+
+    }
 
 	void Camera::dX(double d) {
 		m_position.x += d * cos(-m_angles.pitch);

@@ -6,10 +6,24 @@ namespace nu {
         m_pixels = new Pixel[points];
     }
     Object::~Object() {
-        if (m_points != nullptr)
+        /*if (m_points != nullptr) {
+            for(int i=0; i < 391942; i++){
+                delete& m_points[i].x;
+                delete& m_points[i].y;
+                delete& m_points[i].z;
+            }
             delete[] m_points;
-        if (m_pixels != nullptr)
+        }
+        if (m_pixels != nullptr) {
+            for(int i=0; i < 391942; i++){
+                delete& m_pixels[i].r;
+                delete& m_pixels[i].g;
+                delete& m_pixels[i].b;
+            }
             delete[] m_pixels;
+        }*/
+        delete[]m_points;
+        delete[]m_pixels;
     }
 
     std::vector<std::string> split(const std::string& s, const char * delim) {
@@ -54,7 +68,7 @@ namespace nu {
         } else
             std::cout << "fooey\n";
     }
-    void Object::ReadMonkey() {
+    void Object::ReadTerror() {
         m_size = 0;
         std::string line;
         std::ifstream myfile( "img/variant.xyz");
@@ -77,34 +91,70 @@ namespace nu {
                                 {-sin(3.14), 0, cos(3.14)}
                         } });*/
 
-        Mat33d rotateX({ {
-                                {1, 0, 0},
-                                {0,cos(3.14/2), sin(3.14/2)},
-                                {0, -sin(3.14/2), cos(3.14/2)}
-                        } });
-        Mat33d rotateZ({ {
-                                {cos(3*3.14/4), -sin(3*3.14/4), 0},
-                                {sin(3*3.14/4),cos(3*3.14/4), 0},
-                                {0, 0, 1}
-                        } });
+        Mat33d rotateXZ({ {
+                                 {cosc, -sinc, 0},
+                                 {sinc*cosb,cosc*cosb, sinb},
+                                 {-sinb*cosb, -sinb*cosc, cosb}
+                         } });
 
         if (myfile){
             while (getline( myfile, line )){
                 std::vector<std::string> r = split(line, " ");
 
-                m_points[m_size].x = stod(r[0])+40;
-                m_points[m_size].y = stod(r[1])+10; //+ - отдаляем от дом: - приближаем
-                m_points[m_size].z = stod(r[2])-50;
+                m_points[m_size + 264719].x = stod(r[0])+40;
+                m_points[m_size + 264719].y = stod(r[1])+10; //+ - отдаляем от дом: - приближаем
+                m_points[m_size + 264719].z = stod(r[2])-50;
 
-                Vec13d value({m_points[m_size].x, m_points[m_size].y, m_points[m_size].z});
+                Vec13d value({m_points[m_size + 264719].x, m_points[m_size + 264719].y, m_points[m_size + 264719].z});
+
+                Vec13d P_res = value*rotateXZ;
+
+                m_points[m_size + 264719].x = P_res.get(0, 0);
+                m_points[m_size + 264719].y = P_res.get(0, 1);
+                m_points[m_size + 264719].z = P_res.get(0, 2);
+
+                m_pixels[m_size + 264719] = {255, 0, 0, 255};
+
+                m_size++;
+            }
+            myfile.close();
+        } else
+            std::cout << "fooey\n";
+    }
+    void Object::ReadSmallTerror() {
+        m_size = 0;
+        std::string line;
+        std::ifstream myfile( "img/variant.xyz");
+
+        Mat33d rotateX({ {
+                                 {1, 0, 0},
+                                 {0,cosb, sinb},
+                                 {0, -sinb, cosb}
+                         } });
+        Mat33d rotateZ({ {
+                                 {cosb, -sinb, 0},
+                                 {sinb,cosb, 0},
+                                 {0, 0, 1}
+                         } });
+
+        if (myfile){
+            while (getline( myfile, line )){
+                std::vector<std::string> r = split(line, " ");
+
+                m_points[m_size + 328331].x = stod(r[0])/25;
+                m_points[m_size + 328331].y = stod(r[1])/25+20;
+                m_points[m_size + 328331].z = stod(r[2])/25-20;
+
+                Vec13d value({m_points[m_size + 328331].x, m_points[m_size + 328331].y, m_points[m_size + 328331].z});
 
                 Vec13d P_res = value*rotateX*rotateZ;
 
-                m_points[m_size].x = P_res.get(0, 0);
-                m_points[m_size].y = P_res.get(0, 1);
-                m_points[m_size].z = P_res.get(0, 2);
+                m_points[m_size + 328331].x = P_res.get(0, 0);
+                m_points[m_size + 328331].y = P_res.get(0, 1);
+                m_points[m_size + 328331].z = P_res.get(0, 2);
 
-                m_pixels[m_size] = {255, 0, 0, 255};
+                m_pixels[m_size + 328331] = {128, 128, 128, 255};
+
                 m_size++;
             }
             myfile.close();
@@ -139,7 +189,7 @@ namespace nu {
         }
     }*/
 
-    Point* Object::randomMonkey(){
+    Point* Object::randomTerror(){
 
 
         /*srand(time(0));

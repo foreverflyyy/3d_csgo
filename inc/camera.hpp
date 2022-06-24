@@ -39,7 +39,7 @@ namespace nu {
 		void dZ(double d);
 		void dRoll(double droll);
 		void dPitch(double dpitch);
-        void MouseWork(float time);
+        void MouseWork();
 
 	private:
 		int m_width;

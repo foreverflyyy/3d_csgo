@@ -21,9 +21,16 @@ namespace nu {
         void ReadFile();
         //void ReadSemiSphere(double first, double second, double third);
         //void ReadCicle();
-        Point* randomMonkey();
-        void ReadMonkey();
+        void ReadTerror();
+        Point* randomTerror();
+        void ReadSmallTerror();
 
+        double cosa = cos(3.14);
+        double sina = sin(3.14);
+        double cosb = cos(3.14/2);
+        double sinb = sin(3.14/2);
+        double cosc = cos(3*3.14/4);
+        double sinc = sin(3*3.14/4);
 
     private:
         std::unique_ptr<Camera> m_camera;
